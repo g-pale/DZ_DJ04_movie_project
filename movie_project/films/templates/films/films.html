@@ -1,0 +1,102 @@
+{% extends 'films/layoute.html' %}
+
+{% block title %}
+    Список фильмов - Movie Project
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="display-4">
+        <i class="bi bi-film"></i> Список фильмов
+    </h1>
+    <a href="{% url 'add_film' %}" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle"></i> Добавить фильм
+    </a>
+</div>
+
+{% if films %}
+    <div class="row">
+        {% for film in films %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-film"></i> {{ film.title }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-3 text-muted">
+                        <i class="bi bi-calendar"></i> {{ film.created_at|date:"d.m.Y H:i" }}
+                    </h6>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-primary">
+                            <i class="bi bi-card-text"></i> Описание:
+                        </h6>
+                        <p class="card-text">{{ film.description|truncatewords:30 }}</p>
+                    </div>
+
+                    <div>
+                        <h6 class="text-success">
+                            <i class="bi bi-star"></i> Отзыв:
+                        </h6>
+                        <p class="card-text">{{ film.review|truncatewords:30 }}</p>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <button type="button" class="btn btn-sm btn-outline-primary" 
+                            data-bs-toggle="modal" data-bs-target="#filmModal{{ film.id }}">
+                        <i class="bi bi-eye"></i> Подробнее
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal для подробной информации -->
+        <div class="modal fade" id="filmModal{{ film.id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="bi bi-film"></i> {{ film.title }}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted mb-3">
+                            <i class="bi bi-calendar"></i> Дата добавления: {{ film.created_at|date:"d.m.Y H:i" }}
+                        </p>
+                        
+                        <div class="mb-4">
+                            <h6 class="text-primary">
+                                <i class="bi bi-card-text"></i> Описание:
+                            </h6>
+                            <p>{{ film.description }}</p>
+                        </div>
+
+                        <div>
+                            <h6 class="text-success">
+                                <i class="bi bi-star"></i> Отзыв:
+                            </h6>
+                            <p>{{ film.review }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center" role="alert">
+        <i class="bi bi-info-circle"></i> 
+        <h4>Пока нет добавленных фильмов</h4>
+        <p>Начните с добавления первого фильма!</p>
+        <a href="{% url 'add_film' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Добавить фильм
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
